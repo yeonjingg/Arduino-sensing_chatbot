@@ -396,6 +396,7 @@ if __name__ == "__main__":
         print("Air Quality Data:")
         print(air_quality_df.head())
 
+#function description
 use_functions = [
     {
         "type": "function",  # Indicates that this entry describes a function
@@ -492,7 +493,7 @@ print(result)
 
 ![image](https://github.com/user-attachments/assets/71509921-dc6b-49f6-9ffb-cec1c1590e6a)
 
-
+- **Description**: Function Description
 ```cpp
 {
   "type": "function",
@@ -581,7 +582,7 @@ print(result)
 - **Description**: Excel file  
   ![image](https://github.com/user-attachments/assets/b50877c0-59fd-4efd-ba58-c51bb2994d3c)
 
-
+- **Description**: Function Description
 ```cpp
 {
   "type": "function",

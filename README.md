@@ -439,4 +439,233 @@ use_functions = [
 
 ```cpp
 
+import requests
+import json
 
+def get_current_weather(city):
+    """
+    Fetches the current weather for a given city using the OpenWeatherMap API.
+
+    Args:
+        city (str): The name of the city to fetch the weather for.
+
+    Returns:
+        str: A string describing the weather conditions, temperature, and humidity in the specified city.
+             Returns an error message if the city is not found.
+    """
+    key = "---"  
+    api = f"http://api.openweathermap.org/geo/1.0/direct?q={city}&limit=5&appid={key}"
+    location_response = requests.get(api)  # Send a request to the geolocation API
+    location = json.loads(location_response.text)  # Parse the JSON response
+
+    # Check if the location data is empty
+    if not location:
+        return f"Error: No location found for city '{city}'"
+
+    # Extract latitude and longitude from the location data
+    lat = location[0]['lat']
+    lon = location[0]['lon']
+
+    # API endpoint to get weather data for the given latitude and longitude
+    location_api = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={key}"
+    result_response = requests.get(location_api)  
+    result = json.loads(result_response.text)  
+
+    # Extract weather information
+    weather = result['weather'][0]['main']  # Main weather condition
+    temp = result['main']['temp']  # Temperature in Kelvin
+    temp = round(temp - 273.15, 2)  # Convert temperature to Celsius and round to 2 decimal places
+    hum = result['main']['humidity']  # Humidity percentage
+
+    # Return the formatted weather data
+    return f"City: {city}, Weather: {weather}, Temperature: {temp}°C, Humidity: {hum}%"
+
+# Example usage
+city_name = "대전"  # City name in Korean (Daejeon)
+result = get_current_weather(city_name)  # Fetch the weather data
+print(result)
+
+```
+
+- **Description**: Use Example Results
+
+![image](https://github.com/user-attachments/assets/71509921-dc6b-49f6-9ffb-cec1c1590e6a)
+
+
+```cpp
+{
+  "type": "function",
+  "function": {
+    "name": "get_current_weather",
+    "description": "Fetch current weather information for a given city, including temperature, humidity, and general weather conditions. This city corresponds to the region name provided in the get_stations_by_region function.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "The name of the city for which to fetch weather information. This city corresponds to the region name in get_stations_by_region."
+        }
+      },
+      "required": ["city"]
+    },
+    "returns": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "The name of the city."
+        },
+        "weather": {
+          "type": "string",
+          "description": "The general weather condition (e.g., Clear, Rain, Clouds)."
+        },
+        "temperature": {
+          "type": "number",
+          "description": "The temperature in Celsius."
+        },
+        "humidity": {
+          "type": "number",
+          "description": "The percentage of humidity."
+        }
+      },
+      "description": "Current weather information for the specified city."
+    }
+  }
+}
+```
+---
+
+## 🛠️ 장소명 불러오는 함수
+
+---
+
+```cpp
+
+import pandas as pd
+
+# File path for the Excel file
+file_path = '/content/station_list.xls'
+
+# Load the Excel file into a DataFrame
+df = pd.read_excel(file_path)
+
+# Function to retrieve station names based on the specified region name
+def get_stations_by_region(region_name):
+    try:
+        # Columns for filtering (retain the Korean column names)
+        region_column = '지역명'  # Column containing region names
+        station_column = '측정소명'  # Column containing station names
+
+        # Filter the DataFrame for the given region name and extract station names
+        filtered_stations = df[df[region_column] == region_name][station_column].tolist()
+        return filtered_stations
+    except KeyError as e:
+        # Handle errors when specified columns are not found in the DataFrame
+        print(f"Error: Column not found - {e}")
+        return []
+
+# Example usage
+region = "대전"  
+result = get_stations_by_region(region) 
+print(result)  
+
+```
+
+- **Description**: Use Example Results
+
+![image](https://github.com/user-attachments/assets/e6ac108b-223d-49e7-b454-544963d0e730)
+
+
+- **Description**: Excel file
+![image](https://github.com/user-attachments/assets/b50877c0-59fd-4efd-ba58-c51bb2994d3c)
+
+```cpp
+{
+  "type": "function",
+  "function": {
+    "name": "get_stations_by_region",  // Function name
+    "description": "Retrieve a list of monitoring stations in a specified region using a DataFrame.",
+    "parameters": {
+      "type": "object",  // Parameters should be an object
+      "properties": {
+        "region_name": {
+          "type": "string",  // The region name is a string
+          "description": "The name of the region for which to retrieve monitoring stations."
+        }
+      },
+      "required": ["region_name"]  // 'region_name' is a required parameter
+    },
+    "returns": {
+      "type": "string",  // The function returns a string
+      "description": "A string containing the region name followed by a list of station names. Returns a message if the region does not exist or an error occurs."
+    }
+  }
+}
+```
+
+---
+
+## 🛠️ ChatGPTs 역할 부여
+
+---
+
+```cpp
+
+import gradio as gr
+import random
+import os
+from openai import OpenAI
+
+# Initial system message for the AI assistant
+messages = [
+    {
+        "role": "system",
+        "content": (
+            "You are an assistant specialized in analyzing indoor and outdoor air quality, "
+            "including temperature and humidity, to recommend whether to ventilate by opening windows. "
+            "Consider factors such as particulate matter, gas pollutants, temperature comfort levels, "
+            "and relative humidity for comprehensive recommendations."
+        )
+    }
+]
+
+# Function to process user input and interact with OpenAI
+def process(user_message, chat_history):
+    # Calls the OpenAI API with the specified model and input
+    proc_messages, ai_message = ask_openai("gpt-4o-mini", messages, user_message, functions=use_functions)
+    # Appends user and AI messages to the chat history
+    chat_history.append((user_message, ai_message))
+    return "", chat_history
+
+# Gradio interface
+with gr.Blocks() as demo:
+    chatbot = gr.Chatbot(label="채팅창")  # Chatbot interface
+    user_textbox = gr.Textbox(label="입력")  # Textbox for user input
+    # Submits user input and updates chat history
+    user_textbox.submit(process, [user_textbox, chatbot], [user_textbox, chatbot])
+    demo.launch(share=True, debug=True)  # Launch Gradio app with sharing and debug enabled
+
+```
+
+---
+
+## 🛠️ 활용 방안
+
+---
+
+### 1. Vehicle Ventilation System
+CO 100-200ppm causes minor headaches, fatigue,
+CO 400 ppm or more can lead to drowsiness, dizziness, and, in severe cases, loss of consciousness
+It is a system that automatically opens the window to ventilate when it exceeds this number
+
+---
+
+### 2. Hospital ventilation system
+The hospital must have a relative humidity of 40 to 60%, the concentration of fine dust is 35 µg/m ³ or less, CO₂ shall be maintained at less than 1,000 ppm
+This system can prevent the spread of infection in hospitals.
+
+---
+
+### 3. Smart Agricultural Ventilation System
+Relative humidity below 70%, CO₂ concentration should be maintained below 1,200 ppm.
+This system can prevent the occurrence of pests.

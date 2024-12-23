@@ -1,6 +1,8 @@
 # Arduino-sensing_chatbot
-# 📡 Sensor Overview  
+# The primary objective of this project is..
+ The primary objective of this project is to develop a chatbot that supports indoor environmental improvement. By using Arduino and various sensors to measure indoor air quality, and integrating outdoor air quality data through an OpenAPI, we aim to enable users to easily monitor both indoor and outdoor air conditions and receive personalized recommendations on optimal ventilation and other relevant actions.
 
+# 📡 Sensor Overview  
 ## 🛠️ Using Sensors  
 
 ### 1. DHT11  

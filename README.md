@@ -26,7 +26,7 @@
 
 ---
 
-## 🛠️ 사용 센서 및 코드  
+## 🛠️ The Arduino code for the sensors used
 
 ---
 

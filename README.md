@@ -1,6 +1,6 @@
 # Arduino-sensing_chatbot
 # The primary objective of this project is..
- The primary objective of this project is to develop a chatbot that supports indoor environmental improvement. By using Arduino and various sensors to measure indoor air quality, and integrating outdoor air quality data through an OpenAPI, we aim to enable users to easily monitor both indoor and outdoor air conditions and receive personalized recommendations on optimal ventilation and other relevant actions.
+ The primary objective of this project is to develop a chatbot that supports indoor environmental improvement. By using Arduino and various sensors to measure indoor air quality, and integrating outdoor air quality data through an OpenAPI, we aim to enable users to easily monitor both indoor and outdoor air conditions and receive personalized recommendations on optimal ventilation and other relevant actions. In this project, we have implemented both the indoor air quality measurement and outdoor air quality retrieval functions as dedicated modules for the chatbot. Let's see how this was implemented.
 
 # 📡 Sensor Overview  
 ## 🛠️ Using Sensors  
@@ -192,9 +192,9 @@ float calculatePPM(float voltage) {
 ```
 ---
 
-### 4. Final sensor function
+### 4. Final sensor code
 
-Final sensor function
+Final sensor code
 
 ```cpp
 // If 30 data points are collected, calculate and display averages
@@ -255,8 +255,7 @@ if (count == 30) {
 
 ---
 
-### 5. Final sensor code
-
+### 5. Final sensor function that chatbot can use.
 ```cpp
 import serial
 import time
@@ -337,7 +336,7 @@ if average_string:
 
 ---
 
-## 🛠️ 실외 대기질 OpenAPI 
+## 🛠️ Retrieving Outdoor Air Quality Information Using an OpenAPI
 
 ---
 
@@ -435,7 +434,7 @@ use_functions = [
 
 ---
 
-## 🛠️ 날씨 함수로부터 온습도 추출하는 함수
+## 🛠️ Retrieving Outdoor Temperature and Humidity Data Using a Weather OpenAPI
 
 ---
 
@@ -537,8 +536,8 @@ print(result)
 ```
 ---
 
-## 🛠️ 장소명 불러오는 함수
-
+## 🛠️  A function that outputs the region name and monitoring station name
+This function returns the region and monitoring station names from which external air quality and temperature-humidity data are retrieved.
 ---
 
 ```cpp
@@ -607,7 +606,7 @@ print(result)
 
 ---
 
-## 🛠️ ChatGPTs 역할 부여
+## 🛠️ Assigning Roles to ChatGPT
 
 ---
 
@@ -651,7 +650,7 @@ with gr.Blocks() as demo:
 
 ---
 
-## 🛠️ 활용 방안
+## 🛠️ Utilization Plan
 
 ---
 

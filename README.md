@@ -573,12 +573,14 @@ print(result)
 ```
 
 - **Description**: Use Example Results
+  ![image](https://github.com/user-attachments/assets/3874a7b7-908d-43b2-8807-98cabd1facaa)
 
-![image](https://github.com/user-attachments/assets/e6ac108b-223d-49e7-b454-544963d0e730)
 
 
-- **Description**: Excel file
-![image](https://github.com/user-attachments/assets/b50877c0-59fd-4efd-ba58-c51bb2994d3c)
+
+- **Description**: Excel file  
+  ![image](https://github.com/user-attachments/assets/b50877c0-59fd-4efd-ba58-c51bb2994d3c)
+
 
 ```cpp
 {
